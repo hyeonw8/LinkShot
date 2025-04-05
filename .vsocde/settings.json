@@ -1,0 +1,21 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // 자동 import 정리
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+
+  // 파일 끝에 개행 자동 추가
+  "files.insertFinalNewline": true,
+
+  // 저장 안 된 파일 자동 저장
+  "files.autoSave": "onFocusChange",
+
+  // Tailwind class 정렬 플러그인 쓸 때
+  "tailwindCSS.experimental.classRegex": [
+    "clsx\\(([^)]*)\\)",
+    "twMerge\\(([^)]*)\\)"
+  ]
+}
