@@ -1,4 +1,4 @@
-import { LinkShotContent } from "@/components/LinkShotContent";
+import { LinkShotManager } from "@/components/LinkShotManager";
 import Link from "next/link";
 
 export default function Home() {
@@ -10,7 +10,7 @@ export default function Home() {
         <div className="text-center">
         <Link href='/mypage' className="font-bold text-xl text-green-300">저장한 Link Shot 보러가기</Link>
         </div>
-        <LinkShotContent />
+        <LinkShotManager />
       </div>
     </div>
   );
