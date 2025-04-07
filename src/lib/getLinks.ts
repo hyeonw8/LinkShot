@@ -1,4 +1,4 @@
-import { LinkQueryParams } from '@/hooks/useLinksQuery';
+import { LinkQueryParams } from '@/hooks/query/useLinksQuery';
 
 export const getLinks = async (params?: LinkQueryParams) => {
   try {
