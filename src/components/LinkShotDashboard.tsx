@@ -2,14 +2,15 @@
 
 import { useLinksQuery } from '@/hooks/useLinksQuery';
 import { SkeletonListSection } from './skeleton/SkeletonListSection';
-import { LinkShotCard } from './LinkShotCard';
 import { useDeleteLinkMutation } from '@/hooks/useDeleteLinkMutation';
 import { useToggleLinkPinMutation } from '@/hooks/useToggleLinkPinMutation';
-import { LinkResponse } from '@/types/link.types';
 import { useState, useEffect, useCallback } from 'react';
 import { usePinnedLinksQuery } from '@/hooks/usePinnedLinksQuery';
+import { Filter } from './Filter';
+import { LinkShotList } from './LinkShotList';
+import { Pagination } from './Pagination';
 
-export const LinkShotsList = () => {
+export const LinkShotDashboard = () => {
   // 필터링 및 정렬 상태
   const [categories, setCategories] = useState<string[]>(['전체']);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
@@ -122,75 +123,36 @@ export const LinkShotsList = () => {
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto px-4">
-      {/* 필터 UI */}
-      <div className="flex justify-between items-center mb-2 bg-green-200 p-4 rounded-lg shadow-sm">
-        <div className="flex gap-3">
-          <select
-            value={selectedCategory}
-            onChange={handleCategoryChange}
-            className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-            disabled={isLoadingCategories}
-          >
-            {isLoadingCategories ? (
-              <option>로딩 중...</option>
-            ) : (
-              categories.map((category: string) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))
-            )}
-          </select>
+      <Filter
+        categories={categories}
+        selectedCategory={selectedCategory}
+        sortOrder={sortOrder}
+        onCategoryChange={handleCategoryChange}
+        onSortChange={handleSortChange}
+      />
 
-          <select
-            value={sortOrder}
-            onChange={handleSortChange}
-            className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-          >
-            <option value="newest">최신순</option>
-            <option value="oldest">오래된 순</option>
-          </select>
-        </div>
-      </div>
-
-      {/* 고정된 링크 리스트 - 높이 제한 제거 */}
+      {/* 고정된 링크 리스트 */}
       {pinned.length > 0 && (
-        <div className="w-full">
-          <h2 className="text-lg font-bold mb-3 pl-1">📌 고정된 링크</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {pinned.map((link: LinkResponse) => (
-              <div key={link.id}>
-                <LinkShotCard
-                  link={link}
-                  isPin={true}
-                  onToggleCardPin={handleToggleCardPin}
-                  onDeleteLink={handleDeleteLink}
-                  onGoToPage={handleGoToPage}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+        <LinkShotList
+          title="📌 고정된 링크"
+          links={pinned}
+          isPinned={true}
+          onToggleCardPin={handleToggleCardPin}
+          onDeleteLink={handleDeleteLink}
+          onGoToPage={handleGoToPage}
+        />
       )}
 
-      {/* 일반 링크 리스트 - 높이 제한 제거 */}
+      {/* 일반 링크 리스트 */}
       {unpinned.length > 0 && (
-        <div className="w-full">
-          <h2 className="text-lg font-bold mb-3 pl-1">📝 일반 링크</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {unpinned.map((link: LinkResponse) => (
-              <div key={link.id}>
-                <LinkShotCard
-                  link={link}
-                  isPin={false}
-                  onToggleCardPin={handleToggleCardPin}
-                  onDeleteLink={handleDeleteLink}
-                  onGoToPage={handleGoToPage}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+        <LinkShotList
+          title="📝 일반 링크"
+          links={unpinned}
+          isPinned={false}
+          onToggleCardPin={handleToggleCardPin}
+          onDeleteLink={handleDeleteLink}
+          onGoToPage={handleGoToPage}
+        />
       )}
 
       {unpinned.length === 0 && (
@@ -199,37 +161,13 @@ export const LinkShotsList = () => {
         </div>
       )}
 
-      {/* 페이지네이션 UI */}
+      {/* 페이지네이션 */}
       {pagination && pagination.totalPages > 1 && (
-        <div className="flex justify-center items-center mt-6 py-3">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => handlePageChange(page - 1)}
-              disabled={page === 1}
-              className={`px-4 py-2 rounded-md transition-colors ${
-                page === 1
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-black text-white dark:bg-white dark:text-black hover:bg-gray-500'
-              }`}
-            >
-              이전
-            </button>
-            <span className="text-sm font-medium">
-              {page} / {pagination.totalPages}
-            </span>
-            <button
-              onClick={() => handlePageChange(page + 1)}
-              disabled={page === pagination.totalPages}
-              className={`px-4 py-2 rounded-md transition-colors ${
-                page === pagination.totalPages
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-black text-white dark:bg-white dark:text-black hover:bg-gray-500'
-              }`}
-            >
-              다음
-            </button>
-          </div>
-        </div>
+        <Pagination
+          page={page}
+          totalPages={pagination.totalPages}
+          onPageChange={handlePageChange}
+        />
       )}
     </div>
   );
