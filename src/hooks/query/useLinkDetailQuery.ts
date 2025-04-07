@@ -1,11 +1,10 @@
+import { queryKeys } from '@/constants/queryKeys';
 import { getDetailLink } from '@/lib/getDetailLink';
-import { getLinks } from '@/lib/getLinks';
-import { getMeta } from '@/lib/getMeta';
 import { useQuery } from '@tanstack/react-query';
 
 export const useLinkDetailQuery = (id: string) => {
   const { data, isPending, error } = useQuery({
-    queryKey: ['links', id],
+    queryKey: queryKeys.links.detail(id),
     queryFn: () => getDetailLink(id),
     // select: (data) => data.links,
   });

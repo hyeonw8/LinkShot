@@ -1,3 +1,4 @@
+import { queryKeys } from '@/constants/queryKeys';
 import { getLinks } from '@/lib/getLinks';
 import { useQuery } from '@tanstack/react-query';
 
@@ -10,10 +11,9 @@ export interface LinkQueryParams {
 }
 
 export const useLinksQuery = (params?: LinkQueryParams) => {
-  const queryKey = ['links', params];
 
   const { data, isPending, error } = useQuery({
-    queryKey: queryKey,
+    queryKey: queryKeys.links.list(params),
     queryFn: () => getLinks(params),
     enabled: !!params, 
   });

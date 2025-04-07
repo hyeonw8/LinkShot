@@ -1,3 +1,5 @@
+import { queryKeys } from '@/constants/queryKeys';
+import { createLink } from '@/lib/createLink';
 import { CreateLinkInput } from '@/types/link.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -6,29 +8,10 @@ export const useCreateLinkMutation = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const createLinkShot = async (linkData: CreateLinkInput) => {
-    try {
-      const res = await fetch('/api/links', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ links: linkData }),
-      });
-
-      if (!res.ok) throw new Error('Link Shot 저장 요청 실패');
-
-      const data = await res.json();
-      // console.log('저장 결과:', data);
-    } catch (err) {
-      console.error('Link Shot 저장 실패:', err);
-    }
-  };
-
   const createLinkMutation = useMutation({
-    mutationFn: (linkData: CreateLinkInput) => createLinkShot(linkData),
+    mutationFn: (linkData: CreateLinkInput) => createLink(linkData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['links'] });
+      queryClient.invalidateQueries({ queryKey: ['links', 'list'] });
       alert('저장되었습니다! 보관함으로 이동합니다.');
       router.push('/mypage');
     },
