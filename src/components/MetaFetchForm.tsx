@@ -23,10 +23,10 @@ export const MetaFetchForm = ({
       />
       <button
         type="submit"
-        className="w-full bg-green-300 rounded-md px-3 py-2 text-black font-semibold"
+        className="w-full bg-green-300 hover:bg-green-400 rounded-md px-3 py-2 text-black font-semibold cursor-pointer"
       >
         {isLoading ? '불러오는 중...' : '불러오기'}
       </button>
     </form>
-  )
-}
+  );
+};

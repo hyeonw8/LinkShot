@@ -20,8 +20,8 @@ export const metadata: Metadata = {
   title: 'Link Shot .ᐟ',
   description: '__Link Shot Project__.ᐟ',
   icons: {
-    icon: '/assets/svg/globe.svg'
-  }
+    icon: '/assets/svg/globe.svg',
+  },
 };
 
 export default function RootLayout({
@@ -37,9 +37,7 @@ export default function RootLayout({
         <QueryProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <AuthInitializer />
-            <div className="">
-              <Header />
-            </div>
+            <Header />
             {children}
           </ThemeProvider>
         </QueryProvider>
