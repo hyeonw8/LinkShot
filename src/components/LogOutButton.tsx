@@ -17,7 +17,7 @@ export const LogOutButton = () => {
   return (
     <button
       onClick={handleLogout}
-      className="flex w-full items-center justify-center rounded-[0.5rem] border border-[#CCC] bg-black dark:bg-white  hover:gray-300 px-[2rem] py-[0.75rem]"
+      className="flex w-full items-center justify-center rounded-[0.5rem] border border-[#CCC] bg-black dark:bg-white  hover:gray-300 px-[1.5rem] py-[0.5rem]"
     >
       <p className="text-[0.9375rem] font-medium dark:text-black text-white ">
         로그아웃
