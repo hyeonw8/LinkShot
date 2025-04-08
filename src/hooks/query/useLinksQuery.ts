@@ -1,6 +1,7 @@
 import { queryKeys } from '@/constants/queryKeys';
 import { getLinks } from '@/lib/getLinks';
-import { useQuery } from '@tanstack/react-query';
+import { PaginatedLinksResponse } from '@/types/link.types';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 export interface LinkQueryParams {
   category?: string;
@@ -11,16 +12,24 @@ export interface LinkQueryParams {
 }
 
 export const useLinksQuery = (params?: LinkQueryParams) => {
-
-  const { data, isPending, error } = useQuery({
+  const {
+    data: regularData,
+    isPending: isRegularPending,
+    isFetching: isRegularFetching,
+    isPlaceholderData: isRegularPlaceholder,
+    error: regularError,
+  } = useQuery<PaginatedLinksResponse, Error>({
     queryKey: queryKeys.links.list(params),
     queryFn: () => getLinks(params),
-    enabled: !!params, 
+    placeholderData: keepPreviousData,
+    enabled: !!params,
   });
 
   return {
-    data,
-    isPending,
-    error,
+    regularData,
+    isRegularPending,
+    isRegularFetching,
+    isRegularPlaceholder,
+    regularError,
   };
 };
