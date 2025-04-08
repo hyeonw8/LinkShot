@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { ShareLinkButton } from './ShareLinkButton';
+import { ShareLinkButton } from '../../../components/ShareLinkButton';
 import Link from 'next/link';
 import { LinkResponse } from '@/types/link.types';
 import { getDateTime } from '@/utils/getDateTime';
