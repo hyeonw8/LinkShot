@@ -3,7 +3,6 @@
 import { Pagination } from '@/components/Pagination';
 import { usePinnedLinksQuery } from '@/hooks/query/usePinnedLinksQuery';
 import { LinkShotList } from './LinkShotList';
-import { usePagination } from '@/hooks/usePagination';
 import { SkeletonListSection } from '@/components/skeleton/SkeletonListSection';
 
 interface PinnedLinksSectionProps {
