@@ -17,7 +17,7 @@ export const MetaFetchForm = ({
         name="url"
         type="text"
         placeholder="링크를 입력하세요"
-        className="w-full border border-black dark:border-white px-3 py-2 rounded-md"
+        className="w-full border border-black dark:border-white px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300"
         value={url}
         onChange={onChangeUrl}
       />
