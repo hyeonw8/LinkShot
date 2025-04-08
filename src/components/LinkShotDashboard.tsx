@@ -1,76 +1,68 @@
 'use client';
 
-import { useLinksQuery } from '@/hooks/useLinksQuery';
+import { useLinksQuery } from '@/hooks/query/useLinksQuery';
 import { SkeletonListSection } from './skeleton/SkeletonListSection';
-import { useDeleteLinkMutation } from '@/hooks/useDeleteLinkMutation';
-import { useToggleLinkPinMutation } from '@/hooks/useToggleLinkPinMutation';
-import { useState, useEffect, useCallback } from 'react';
-import { usePinnedLinksQuery } from '@/hooks/usePinnedLinksQuery';
-import { Filter } from './Filter';
+import { useDeleteLinkMutation } from '@/hooks/mutation/useDeleteLinkMutation';
+import { useCallback } from 'react';
+import { usePinnedLinksQuery } from '@/hooks/query/usePinnedLinksQuery';
 import { LinkShotList } from './LinkShotList';
 import { Pagination } from './Pagination';
+import { useToggleLinkMutation } from '@/hooks/mutation/useToggleLinkMutation';
 
-export const LinkShotDashboard = () => {
-  // 필터링 및 정렬 상태
-  const [categories, setCategories] = useState<string[]>(['전체']);
-  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('전체');
-  const [sortOrder, setSortOrder] = useState('newest'); // 'newest' 또는 'oldest'
-  const [page, setPage] = useState(1);
+interface LinkShotDashboardProps {
+  selectedCategory: string;
+  sortOrder: string;
+  pinnedPage: number;
+  unpinnedPage: number;
+  onPageChange: (newPage: number, type: 'pinned' | 'unpinned') => void;
+}
+
+export const LinkShotDashboard = ({
+  selectedCategory,
+  sortOrder,
+  pinnedPage,
+  unpinnedPage,
+  onPageChange,
+}: LinkShotDashboardProps) => {
   const limit = 8; // 페이지당 보여줄 항목 수
 
-  // 카테고리 목록 불러오기
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        setIsLoadingCategories(true);
-        const response = await fetch('/api/categories', {
-          next: {
-            revalidate: 3600, // 1시간마다 재검증
-          },
-        });
-        if (!response.ok) {
-          throw new Error('카테고리를 불러오는데 실패했습니다');
-        }
-        const data = await response.json();
-        setCategories(data.categories);
-      } catch (error) {
-        console.error('카테고리 로딩 중 오류:', error);
-      } finally {
-        setIsLoadingCategories(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
   // 고정된 링크만 별도로 가져오는 쿼리
-  const { pinnedData, isPinnedPending, pinnedError } = usePinnedLinksQuery();
+  const {
+    pinnedData,
+    isPinnedPending,
+    isPinnedFetching,
+    pinnedError,
+    isPinnedPlaceholder,
+  } = usePinnedLinksQuery(pinnedPage);
   // 일반 링크를 가져오는 쿼리 (고정되지 않은 링크만)
   const {
-    data: regularData,
-    isPending: isRegularLoading,
-    error: regularError,
+    regularData,
+    isRegularPending,
+    isRegularFetching,
+    regularError,
+    isRegularPlaceholder,
   } = useLinksQuery({
     category: selectedCategory === '전체' ? undefined : selectedCategory,
     sort: sortOrder,
-    page,
+    page: unpinnedPage,
     limit,
-    pinned: false, // 고정된 링크 제외하는 옵션 추가
+    pinned: false,
   });
+
   const { deleteLinkMutation } = useDeleteLinkMutation();
-  const { toggleLinkPinMutation } = useToggleLinkPinMutation();
+  const { toggleLinkMutation } = useToggleLinkMutation();
 
   // 고정된 링크와 일반 링크
   const pinned = pinnedData?.links || [];
   const unpinned = regularData?.links || [];
-  const pagination = regularData?.pagination;
+  const pinnedPagination = pinnedData?.pagination;
+  const unpinnedPagination = regularData?.pagination;
 
   const handleToggleCardPin = useCallback(
     (id: string, isPin: boolean) => {
-      toggleLinkPinMutation.mutate({ id, isPin });
+      toggleLinkMutation.mutate({ id, isPin });
     },
-    [toggleLinkPinMutation]
+    [toggleLinkMutation]
   );
 
   const handleDeleteLink = useCallback(
@@ -84,36 +76,20 @@ export const LinkShotDashboard = () => {
     window.open(url, '_blank');
   }, []);
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newCategory = e.target.value;
-
-    // 실제 변경이 없을 경우에는 호출하지 않도록
-    if (selectedCategory !== newCategory) {
-      setSelectedCategory(newCategory);
-      setPage(1); // 카테고리 변경 시 페이지 1로 리셋
-    }
-  };
-
-  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newSort = e.target.value;
-
-    if (sortOrder !== newSort) {
-      setSortOrder(e.target.value);
-      setPage(1); // 정렬 기준 변경 시 페이지 1로 리셋
-    }
-  };
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-
-  if (isRegularLoading || isPinnedPending)
+  if (isRegularPending || isPinnedPending)
     return (
       <div className="space-y-8">
-        <SkeletonListSection title="📌 고정된 링크" />
+        <SkeletonListSection title="📌 고정된 링크" count={4} />
         <SkeletonListSection title="📝 일반 링크" />
       </div>
     );
+
+  if (isPinnedFetching) {
+    return <SkeletonListSection title="📌 고정된 링크" count={4} />;
+  }
+  if (isRegularFetching) {
+    return <SkeletonListSection title="📝 일반 링크" />;
+  }
   // 에러 처리
   if (pinnedError)
     return <p>고정된 링크 로딩 중 에러 발생: {pinnedError.message}</p>;
@@ -123,14 +99,6 @@ export const LinkShotDashboard = () => {
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto px-4">
-      <Filter
-        categories={categories}
-        selectedCategory={selectedCategory}
-        sortOrder={sortOrder}
-        onCategoryChange={handleCategoryChange}
-        onSortChange={handleSortChange}
-      />
-
       {/* 고정된 링크 리스트 */}
       {pinned.length > 0 && (
         <LinkShotList
@@ -141,6 +109,24 @@ export const LinkShotDashboard = () => {
           onDeleteLink={handleDeleteLink}
           onGoToPage={handleGoToPage}
         />
+      )}
+
+      {/* 페이지네이션 */}
+      {pinnedPagination && pinnedPagination.totalPages > 1 && (
+        <>
+          <Pagination
+            type="pinned"
+            page={pinnedPage}
+            totalPages={pinnedPagination.totalPages}
+            onPageChange={onPageChange}
+            isDisabled={isPinnedPlaceholder}
+          />
+          {isPinnedPlaceholder && (
+            <div className="text-center text-xs text-gray-400 mt-1">
+              다음 페이지 불러오는 중...
+            </div>
+          )}
+        </>
       )}
 
       {/* 일반 링크 리스트 */}
@@ -162,12 +148,21 @@ export const LinkShotDashboard = () => {
       )}
 
       {/* 페이지네이션 */}
-      {pagination && pagination.totalPages > 1 && (
-        <Pagination
-          page={page}
-          totalPages={pagination.totalPages}
-          onPageChange={handlePageChange}
-        />
+      {unpinnedPagination && unpinnedPagination.totalPages > 1 && (
+        <>
+          <Pagination
+            type="unpinned"
+            page={unpinnedPage}
+            totalPages={unpinnedPagination.totalPages}
+            onPageChange={onPageChange}
+            isDisabled={isRegularPlaceholder}
+          />
+          {isRegularPlaceholder && (
+            <div className="text-center text-xs text-gray-400 mt-1">
+              다음 페이지 불러오는 중...
+            </div>
+          )}
+        </>
       )}
     </div>
   );
