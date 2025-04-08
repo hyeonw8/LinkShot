@@ -12,7 +12,7 @@ export const SkeletonListSection = ({
       <h2 className="text-lg font-bold mb-3 pl-1">{title}</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {Array.from({ length: count }).map((_, idx) => (
-          <div className="border border-gray-200  rounded-lg animate-pulse shadow-sm hover:shadow-md transition-shadow duration-300 h-full flex flex-col">
+          <div key={idx} className="border border-gray-200  rounded-lg animate-pulse shadow-sm hover:shadow-md transition-shadow duration-300 h-full flex flex-col">
             {/* 이미지 섹션 */}
             <div className="h-32 bg-gray-100 "></div>
             {/* 콘텐츠 섹션 */}

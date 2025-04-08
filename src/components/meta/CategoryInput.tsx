@@ -37,7 +37,7 @@ export const CategoryInput = ({
             : 'bg-green-500 hover:bg-green-600 '
         }`}
       >
-        {isSaving ? '저장 중...' : '저장하기'}
+        {isSaving ? '저장 중..' : '저장하기'}
       </button>
     </form>
   );

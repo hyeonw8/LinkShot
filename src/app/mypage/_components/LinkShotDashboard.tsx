@@ -19,7 +19,7 @@ export const LinkShotDashboard = ({
   onPageChange,
 }: LinkShotDashboardProps) => {
   return (
-    <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto px-4">
+    <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto px-4 pb-6">
       <PinnedLinkShotSection page={pinnedPage} onPageChange={onPageChange} />
       <UnpinnedLinkShotSection
         selectedCategory={selectedCategory}
