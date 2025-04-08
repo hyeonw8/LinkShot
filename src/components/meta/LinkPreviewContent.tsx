@@ -8,12 +8,18 @@ import { useCreateLinkMutation } from '@/hooks/mutation/useCreateLinkMutation';
 import { LinkPreviewCard } from './LinkPreviewCard';
 
 interface LinkPreviewCardProps {
-  meta?: any;
+  linkMetaData: any; // 타입 수정 필요
 }
 
-export const LinkPreviewContent = ({ meta }: LinkPreviewCardProps) => {
-  const { formattedUrl, editTitle, editDescription, handleEditLinkChageInput } =
-    useLinkMetaData();
+export const LinkPreviewContent = ({ linkMetaData }: LinkPreviewCardProps) => {
+  const { 
+    meta,
+    formattedUrl, 
+    editTitle, 
+    editDescription, 
+    handleEditLinkChageInput 
+  } = linkMetaData;
+
   const {
     isEditingMeta,
     categoryInput,
@@ -22,7 +28,6 @@ export const LinkPreviewContent = ({ meta }: LinkPreviewCardProps) => {
     handleEditCancel,
     handleEditFinish,
   } = useLinkEditor();
-  // const [isShowCategoryInput, setIsShowCategoryInput] = useState(false);
 
   const { createLinkMutation } = useCreateLinkMutation();
 
@@ -52,18 +57,6 @@ export const LinkPreviewContent = ({ meta }: LinkPreviewCardProps) => {
         onFinishEdit={handleEditFinish}
         onChangeLinkEditInput={handleEditLinkChageInput}
       />
-{/* 
-      {!isShowCategoryInput && meta && (
-        <div className="flex justify-end">
-          <button
-            type="button"
-            className="bg-green-300 hover:bg-green-400 rounded-md px-5 py-2 text-black font-semibold"
-            onClick={() => setIsShowCategoryInput(true)}
-          >
-            카테고리 입력하기
-          </button>
-        </div>
-      )} */}
 
       {meta && (
         <CategoryInput

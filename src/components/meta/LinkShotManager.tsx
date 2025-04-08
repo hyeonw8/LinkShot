@@ -7,6 +7,7 @@ import { LinkPreviewContent } from './LinkPreviewContent';
 import { useLinkMetaData } from '@/hooks/useLinkMetadata';
 
 export const LinkShotManager = () => {
+  const linkMetaData = useLinkMetaData();
   const {
     url,
     meta,
@@ -14,7 +15,7 @@ export const LinkShotManager = () => {
     isLoading,
     handleChangeUrlInput,
     handleFetchMetaData,
-  } = useLinkMetaData();
+  } = linkMetaData;
 
   return (
     <div className="max-w-md mx-auto px-4 pt-7 pb-5 space-y-4">
@@ -27,7 +28,7 @@ export const LinkShotManager = () => {
 
       {error && <p className="text-sm text-red-500">{error}</p>}
 
-      {meta && meta.title && <LinkPreviewContent meta={meta} />}
+      {meta && meta.title && <LinkPreviewContent linkMetaData={linkMetaData} />}
     </div>
   );
 };

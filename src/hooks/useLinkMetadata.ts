@@ -17,8 +17,7 @@ export const useLinkMetaData = () => {
   const [editDescription, setEditDescription] = useState('');
 
   const handleChangeUrlInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
+    const { value } = e.target;
     setUrl(value);
   };
 
