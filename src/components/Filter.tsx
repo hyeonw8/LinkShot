@@ -2,6 +2,7 @@ interface FilterUIProps {
   categories: string[];
   selectedCategory: string;
   sortOrder: string;
+  isLoading: boolean; // 로딩 상태 추가
   onCategoryChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onSortChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
@@ -10,6 +11,7 @@ export const Filter = ({
   categories,
   selectedCategory,
   sortOrder,
+  isLoading = false,
   onCategoryChange,
   onSortChange,
 }: FilterUIProps) => {
@@ -19,13 +21,18 @@ export const Filter = ({
         <select
           value={selectedCategory}
           onChange={onCategoryChange}
+          disabled={isLoading}
           className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
         >
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
+          {isLoading ? (
+            <option value="">로딩 중...</option>
+          ): (
+            categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))
+          )}
         </select>
 
         <select
