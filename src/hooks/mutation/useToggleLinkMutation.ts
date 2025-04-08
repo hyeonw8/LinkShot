@@ -6,6 +6,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 interface ToggleLinkStatusParams {
   id: string;
   isPin: boolean;
+  currentPage: number;
+  currentPageLinkCount: number;
+  type: string;
+  onPageChange: (newPage: number, type: 'pinned' | 'unpinned') => void;
 }
 type ToggleLinkStatusContext = {
   prevLinks: LinkResponse[];
@@ -45,6 +49,28 @@ export const useToggleLinkMutation = () => {
 
       // 롤백을 위해 이전 상태 반환
       return { prevLinks };
+    },
+    onSuccess: (_, payload) => {
+      const { id, isPin, currentPage, currentPageLinkCount, type, onPageChange } = payload;
+
+      // 현재 페이지의 마지막 항목인지 확인
+      const isLastItemOnPage = currentPageLinkCount === 1;
+      const isNotFirstPage = currentPage > 1;
+
+      // 마지막 항목이면서 첫 페이지가 아니면 이전 페이지로 이동
+      if (isLastItemOnPage && isNotFirstPage) {
+        // console.log('Moving to previous page:', currentPage - 1);
+        onPageChange(currentPage - 1, type as 'pinned' | 'unpinned');
+      } else {
+        // console.log('Staying on current page, invalidating queries');
+        // 현재 페이지 유지하고 데이터 갱신
+        queryClient.invalidateQueries({
+          queryKey:
+            type === 'pinned'
+              ? queryKeys.links.pinnedList(currentPage)
+              : queryKeys.links.list({ page: currentPage }),
+        });
+      }
     },
     onError: (error, variables, context) => {
       // 에러 발생 시 이전 상태로 롤백
