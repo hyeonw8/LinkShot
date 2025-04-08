@@ -4,7 +4,6 @@ import { useLinkFilters } from '@/hooks/useLinkFilters';
 import { useCategoryQuery } from '@/hooks/query/useCategoryQuery';
 import { Filter } from '../../../components/Filter';
 import { LinkShotDashboard } from './LinkShotDashboard';
-import { useState } from 'react';
 
 export const LinkShotContainer = () => {
   const { filters, handlers } = useLinkFilters();
