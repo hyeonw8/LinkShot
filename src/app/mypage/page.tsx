@@ -1,3 +1,4 @@
+import { LinkShotContainer } from '@/components/LinkShotContainer';
 import { LinkShotDashboard } from '@/components/LinkShotDashboard';
 
 const MyPage = () => {
@@ -7,7 +8,7 @@ const MyPage = () => {
         <h1 className=" text-4xl font-bold">My Page</h1>
         <p className="">저장한 Link Shot을 빠르게 찾아보세요.</p>
       </div>
-      <LinkShotDashboard />
+      <LinkShotContainer />
     </div>
   );
 };
