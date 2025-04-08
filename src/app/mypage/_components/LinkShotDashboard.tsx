@@ -1,12 +1,12 @@
 'use client';
 
 import { useLinksQuery } from '@/hooks/query/useLinksQuery';
-import { SkeletonListSection } from './skeleton/SkeletonListSection';
+import { SkeletonListSection } from '../../../components/skeleton/SkeletonListSection';
 import { useDeleteLinkMutation } from '@/hooks/mutation/useDeleteLinkMutation';
 import { useCallback } from 'react';
 import { usePinnedLinksQuery } from '@/hooks/query/usePinnedLinksQuery';
 import { LinkShotList } from './LinkShotList';
-import { Pagination } from './Pagination';
+import { Pagination } from '../../../components/Pagination';
 import { useToggleLinkMutation } from '@/hooks/mutation/useToggleLinkMutation';
 
 interface LinkShotDashboardProps {
