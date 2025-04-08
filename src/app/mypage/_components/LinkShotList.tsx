@@ -1,23 +1,43 @@
+'use client';
+
+import { useDeleteLinkMutation } from '@/hooks/mutation/useDeleteLinkMutation';
+import { useToggleLinkMutation } from '@/hooks/mutation/useToggleLinkMutation';
 import { LinkShotCard } from './LinkShotCard';
 import { LinkResponse } from '@/types/link.types';
+import { useCallback } from 'react';
 
 interface LinkShotListProps {
   title: string;
   links: LinkResponse[];
   isPinned: boolean;
-  onToggleCardPin: (id: string, isPin: boolean) => void;
-  onDeleteLink: (id: string) => void;
-  onGoToPage: (url: string) => void;
 }
 
 export const LinkShotList = ({
   title,
   links,
   isPinned,
-  onToggleCardPin,
-  onDeleteLink,
-  onGoToPage,
 }: LinkShotListProps) => {
+  const { deleteLinkMutation } = useDeleteLinkMutation();
+  const { toggleLinkMutation } = useToggleLinkMutation();
+
+  const handleToggleCardPin = useCallback(
+    (id: string, isPin: boolean) => {
+      toggleLinkMutation.mutate({ id, isPin });
+    },
+    [toggleLinkMutation]
+  );
+
+  const handleDeleteLink = useCallback(
+    (id: string) => {
+      deleteLinkMutation.mutate(id);
+    },
+    [deleteLinkMutation]
+  );
+
+  const handleGoToPage = useCallback((url: string) => {
+    window.open(url, '_blank');
+  }, []);
+
   return (
     <div className="w-full">
       <h2 className="text-lg font-bold mb-3 pl-1">{title}</h2>
@@ -27,9 +47,9 @@ export const LinkShotList = ({
             <LinkShotCard
               link={link}
               isPin={isPinned}
-              onToggleCardPin={onToggleCardPin}
-              onDeleteLink={onDeleteLink}
-              onGoToPage={onGoToPage}
+              onToggleCardPin={handleToggleCardPin}
+              onDeleteLink={handleDeleteLink}
+              onGoToPage={handleGoToPage}
             />
           </div>
         ))}
