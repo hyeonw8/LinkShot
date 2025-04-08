@@ -1,14 +1,17 @@
 import { LinkQueryParams } from '@/hooks/query/useLinksQuery';
 
+const linksKey = ['links']
+
 export const queryKeys = {
   links: {
-    all: ['links'],
+    all: linksKey,
     list: (params?: LinkQueryParams) => [
-      ...queryKeys.links.all,
+      ...linksKey,
       'list',
       params,
     ],
-    detail: (id: string) => [...queryKeys.links.all, id],
-    // pinnedList: ['links', 'pinned'],
+    detail: (id: string) => [...linksKey, id],
+    pinnedList: (page: number) => [...linksKey, 'pinned', page],
+    category: [...linksKey, 'category']
   },
 };
