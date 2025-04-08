@@ -1,4 +1,4 @@
-import { LinkShotContainer } from '@/components/LinkShotContainer';
+import { LinkShotContainer } from '@/app/mypage/_components/LinkShotContainer';
 
 const MyPage = () => {
   return (

@@ -1,4 +1,4 @@
-import { LinkShotManager } from '@/components/LinkShotManager';
+import { LinkShotManager } from '@/components/meta/LinkShotManager';
 import Link from 'next/link';
 
 export default function Home() {
