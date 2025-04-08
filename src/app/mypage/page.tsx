@@ -1,5 +1,4 @@
 import { LinkShotContainer } from '@/components/LinkShotContainer';
-import { LinkShotDashboard } from '@/components/LinkShotDashboard';
 
 const MyPage = () => {
   return (
