@@ -1,5 +1,5 @@
 import { queryKeys } from '@/constants/queryKeys';
-import { toggleLink } from '@/lib/\btoggleLink';
+import { toggleLink } from '@/lib/toggleLink';
 import { LinkResponse } from '@/types/link.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -59,10 +59,8 @@ export const useToggleLinkMutation = () => {
 
       // 마지막 항목이면서 첫 페이지가 아니면 이전 페이지로 이동
       if (isLastItemOnPage && isNotFirstPage) {
-        // console.log('Moving to previous page:', currentPage - 1);
         onPageChange(currentPage - 1, type as 'pinned' | 'unpinned');
       } else {
-        // console.log('Staying on current page, invalidating queries');
         // 현재 페이지 유지하고 데이터 갱신
         queryClient.invalidateQueries({
           queryKey:
