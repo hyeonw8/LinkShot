@@ -17,7 +17,6 @@ export const PinnedLinkShotSection = ({
   const {
     pinnedData,
     isPinnedPending,
-    isPinnedFetching,
     pinnedError,
     isPinnedPlaceholder,
   } = usePinnedLinksQuery(page);
@@ -61,20 +60,14 @@ export const PinnedLinkShotSection = ({
 
       {/* 페이지네이션 */}
       {pagination && pagination.totalPages > 1 && (
-        <>
-          <Pagination
-            type="pinned"
-            page={page}
-            totalPages={pagination.totalPages}
-            onPageChange={onPageChange}
-            isDisabled={isPinnedPlaceholder}
-          />
-          {isPinnedPlaceholder && (
-            <div className="text-center text-xs text-gray-400 mt-1">
-              다음 페이지 불러오는 중...
-            </div>
-          )}
-        </>
+        <Pagination
+          type="pinned"
+          page={page}
+          totalPages={pagination.totalPages}
+          onPageChange={onPageChange}
+          isDisabled={isPinnedPlaceholder}
+          isLoading={isPinnedPlaceholder}
+        />
       )}
     </>
   );

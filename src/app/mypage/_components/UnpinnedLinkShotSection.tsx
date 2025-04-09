@@ -18,19 +18,14 @@ export const UnpinnedLinkShotSection = ({
   limit,
   onPageChange,
 }: UnpinnedLinkShotSectionProps) => {
-  const {
-    regularData,
-    isRegularPending,
-    isRegularFetching,
-    regularError,
-    isRegularPlaceholder,
-  } = useLinksQuery({
-    category: selectedCategory === '전체' ? undefined : selectedCategory,
-    sort: sortOrder,
-    page,
-    limit: 8,
-    pinned: false,
-  });
+  const { regularData, isRegularPending, regularError, isRegularPlaceholder } =
+    useLinksQuery({
+      category: selectedCategory === '전체' ? undefined : selectedCategory,
+      sort: sortOrder,
+      page,
+      limit: 8,
+      pinned: false,
+    });
 
   const links = regularData?.links || [];
   const pagination = regularData?.pagination;
@@ -39,11 +34,6 @@ export const UnpinnedLinkShotSection = ({
   if (isRegularPending) {
     return <SkeletonListSection title="📝 일반 링크" />;
   }
-
-  // // 페이지 변경 중 (이미 데이터가 있는 경우)
-  // if (isRegularFetching && regularData) {
-  //   return <SkeletonListSection title="📝 일반 링크" />;
-  // }
 
   // 에러
   if (regularError) {
@@ -62,7 +52,6 @@ export const UnpinnedLinkShotSection = ({
     );
   }
 
-  // 데이터가 있는 경우
   return (
     <>
       <LinkShotList
@@ -77,20 +66,14 @@ export const UnpinnedLinkShotSection = ({
 
       {/* 페이지네이션 */}
       {pagination && pagination.totalPages > 1 && (
-        <>
-          <Pagination
-            type="unpinned"
-            page={page}
-            totalPages={pagination.totalPages}
-            onPageChange={onPageChange}
-            isDisabled={isRegularPlaceholder}
-          />
-          {isRegularPlaceholder && (
-            <div className="text-center text-xs text-gray-400 mt-1">
-              다음 페이지 불러오는 중...
-            </div>
-          )}
-        </>
+        <Pagination
+          type="unpinned"
+          page={page}
+          totalPages={pagination.totalPages}
+          onPageChange={onPageChange}
+          isDisabled={isRegularPlaceholder}
+          isLoading={isRegularPlaceholder}
+        />
       )}
     </>
   );
