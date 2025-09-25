@@ -1,5 +1,5 @@
 import { queryKeys } from '@/constants/queryKeys';
-import { editLink } from '@/lib/eidtLink';
+import { editLink } from '@/lib/editLink';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
