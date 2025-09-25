@@ -5,7 +5,9 @@ export async function POST(req: Request) {
   const supabase = await createClient();
   const { links } = await req.json();
 
-  const { data, error } = await supabase.from('links').insert(links);
+  const { data, error } = await supabase
+    .from('linkshot_links')
+    .insert(links);
 
   if (error) {
     console.error(error);
@@ -37,7 +39,7 @@ export const GET = async (request: NextRequest) => {
   try {
     // 기본 쿼리 설정
     let query = supabase
-      .from('links')
+      .from('linkshot_links')
       .select('*', { count: 'exact' })
       .eq('user_id', user.id);
 
@@ -95,7 +97,10 @@ export const DELETE = async (request: NextRequest) => {
   const id = await request.json();
 
   try {
-    const { data, error } = await supabase.from('links').delete().eq('id', id);
+    const { data, error } = await supabase
+      .from('linkshot_links')
+      .delete()
+      .eq('id', id);
 
     if (error) {
       console.error(error);
@@ -116,7 +121,7 @@ export const PATCH = async (request: NextRequest) => {
 
   try {
     const { data, error } = await supabase
-      .from('links')
+      .from('linkshot_links')
       .update({ isPin: !isPin })
       .eq('id', id);
 
@@ -138,7 +143,7 @@ export const PUT = async (request: NextRequest) => {
 
   try {
     const { data, error } = await supabase
-      .from('links')
+      .from('linkshot_links')
       .update(links)
       .eq('id', id);
 

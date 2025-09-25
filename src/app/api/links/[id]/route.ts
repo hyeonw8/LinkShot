@@ -11,7 +11,7 @@ export const GET = async (
 
   try {
     const { data: links = [], error } = await supabase
-      .from('links')
+      .from('linkshot_links')
       .select('*')
       .eq('id', id)
       .single();
@@ -34,7 +34,7 @@ export const PUT = async (
 
   try {
     const { data: updateLinks = [], error } = await supabase
-      .from('links')
+      .from('linkshot_links')
       .update(links)
       .eq('id', id);
 
