@@ -1,8 +1,6 @@
 'use client';
 
-import { useCreateLinkMutation } from '@/hooks/mutation/useCreateLinkMutation';
 import { MetaFetchForm } from './MetaFetchForm';
-import { LinkPreviewCard } from './LinkPreviewCard';
 import { LinkPreviewContent } from './LinkPreviewContent';
 import { useLinkMetaData } from '@/hooks/useLinkMetadata';
 
@@ -28,7 +26,7 @@ export const LinkShotManager = () => {
 
       {error && <p className="text-sm text-red-500">{error}</p>}
 
-      {meta && meta.title && <LinkPreviewContent linkMetaData={linkMetaData} />}
+      {meta && <LinkPreviewContent linkMetaData={linkMetaData} />}
     </div>
   );
 };
