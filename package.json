@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "genTypes": "supabase gen types typescript --project-id ithepxwiqlzhbamxikaa --schema public > src/types/supabase.ts"
+    "genTypes": "supabase gen types typescript --project-id $SUPABASE_PROJECT_ID --schema public > src/types/supabase.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
