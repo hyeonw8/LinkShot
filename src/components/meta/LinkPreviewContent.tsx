@@ -1,8 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { CategoryInput } from './CategoryInput';
-import { useLinkMetaData } from '@/hooks/useLinkMetadata';
 import { useLinkEditor } from '@/hooks/useLinkEditor';
 import { useCreateLinkMutation } from '@/hooks/mutation/useCreateLinkMutation';
 import { LinkPreviewCard } from './LinkPreviewCard';
@@ -56,6 +54,8 @@ export const LinkPreviewContent = ({ linkMetaData }: LinkPreviewCardProps) => {
         onCancelEdit={handleEditCancel}
         onFinishEdit={handleEditFinish}
         onChangeLinkEditInput={handleEditLinkChageInput}
+        editTitle={editTitle}
+        editDescription={editDescription}
       />
 
       {meta && (
