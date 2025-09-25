@@ -1,14 +1,14 @@
-export const toggleLink = async (id: string, isPin: boolean) => {
-  const res = await fetch('/api/links', {
-    method: 'PATCH',
+export const editLink = async (id: string, linkData: any) => {
+  const res = await fetch(`/api/links/${id}`, {
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ id, isPin }),
+    body: JSON.stringify({ links: linkData }),
   });
 
   if (!res.ok) {
-    let message = 'Link Shot 카드 고정 요청 실패';
+    let message = 'Link Shot 수정 요청 실패';
     try {
       const body = await res.json();
       if (body?.error) message = body.error;
