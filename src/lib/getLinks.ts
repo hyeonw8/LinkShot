@@ -18,7 +18,7 @@ export const getLinks = async (params?: LinkQueryParams) => {
       ? `?${queryParams.toString()}`
       : '';
 
-    const response = await fetch(`/api/links${queryString}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/links${queryString}`);
 
     if (!response.ok) {
       throw new Error('링크 데이터를 불러오는데 실패했습니다.');
