@@ -9,9 +9,9 @@ interface LinkPreviewCardProps {
   onEditClick: () => void;
   onCancelEdit: () => void;
   onFinishEdit: () => void;
-  onChangeLinkEditInput: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
+  onChangeLinkEditInput: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  editTitle: string;
+  editDescription: string;
 }
 
 export const LinkPreviewCard = ({
@@ -21,6 +21,8 @@ export const LinkPreviewCard = ({
   onCancelEdit,
   onFinishEdit,
   onChangeLinkEditInput,
+  editTitle,
+  editDescription,
 }: LinkPreviewCardProps) => {
   const { title, image, description } = meta;
   return (
@@ -28,17 +30,17 @@ export const LinkPreviewCard = ({
       <LinkPreviewImage image={image} />
       {isEditing ? (
         <LinkEditor
-          title={title}
-          description={description}
+          title={editTitle}
+          description={editDescription}
           onChangeInput={onChangeLinkEditInput}
           onCancelEdit={onCancelEdit}
           onFinishEdit={onFinishEdit}
         />
       ) : (
         <>
-          <h3 className="text-lg">{title || '제목 정보가 없습니다.'}</h3>
+          <h3 className="text-lg">{editTitle || title || '제목 정보가 없습니다.'}</h3>
           <p className="text-gray-500">
-            {description || '설명 정보가 없습니다.'}
+            {editDescription || description || '설명 정보가 없습니다.'}
           </p>
           <div className="flex justify-end">
             <button
@@ -48,7 +50,6 @@ export const LinkPreviewCard = ({
             >
               수정하기
             </button>
-          
           </div>
         </>
       )}
