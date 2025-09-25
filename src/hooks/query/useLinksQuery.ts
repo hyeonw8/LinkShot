@@ -23,6 +23,8 @@ export const useLinksQuery = (params?: LinkQueryParams) => {
     queryFn: () => getLinks(params),
     placeholderData: keepPreviousData,
     enabled: !!params,
+    staleTime: 3 * 60 * 1000, // 3분
+    gcTime: 15 * 60 * 1000 // 15분
   });
 
   return {

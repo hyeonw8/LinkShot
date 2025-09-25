@@ -10,6 +10,8 @@ export const useCategoryQuery = () => {
   } = useQuery({
     queryKey: queryKeys.links.category,
     queryFn: getCategories,
+    staleTime: 3 * 60 * 1000, // 3분
+    gcTime: 15 * 60 * 1000 // 15분
   });
 
   return { categories, isCategoriesPending, categoriesError };

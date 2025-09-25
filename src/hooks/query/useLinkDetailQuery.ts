@@ -6,7 +6,9 @@ export const useLinkDetailQuery = (id: string) => {
   const { data, isPending, error } = useQuery({
     queryKey: queryKeys.links.detail(id),
     queryFn: () => getDetailLink(id),
-    // select: (data) => data.links,
+    enabled: !!id,
+    staleTime: 3 * 60 * 1000, // 3분
+    gcTime: 15 * 60 * 1000 // 15분
   });
 
   return {

@@ -14,7 +14,8 @@ export const usePinnedLinksQuery = (page: number) => {
     queryKey: queryKeys.links.pinnedList(page),
     queryFn: () => getPinnedLinks(page),
     placeholderData: keepPreviousData,
-    // queryFn: () => getLinks(params),
+    staleTime: 3 * 60 * 1000, // 3분
+    gcTime: 15 * 60 * 1000 // 15분
   });
 
   return {
