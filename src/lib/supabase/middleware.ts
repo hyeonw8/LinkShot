@@ -1,5 +1,4 @@
-import { createServerClient } from '@supabase/ssr';
-import { CookieOptions } from 'express';
+import { CookieOptions, createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 interface Cookie {
@@ -10,7 +9,7 @@ interface Cookie {
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
-    request
+    request,
   });
 
   const supabase = createServerClient(
@@ -24,12 +23,14 @@ export async function updateSession(request: NextRequest) {
         setAll(cookiesToSet: Cookie[]) {
           cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value));
           supabaseResponse = NextResponse.next({
-            request
+            request,
           });
-          cookiesToSet.forEach(({ name, value, options }) => supabaseResponse.cookies.set(name, value, options));
-        }
-      }
-    }
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options),
+          );
+        },
+      },
+    },
   );
 
   // IMPORTANT: Avoid writing any logic between createServerClient and
@@ -38,25 +39,30 @@ export async function updateSession(request: NextRequest) {
 
   const {
     data: { user },
-    error
+    error,
   } = await supabase.auth.getUser(); // Supabase 클라이언트를 만들고 getUser 함수를 호출
 
-  // console.log(user);
-  // console.log(error);
-  // console.log(request.nextUrl.pathname);
+  const pathname = request.nextUrl.pathname;
+  const isProtectedRoute = pathname.startsWith('/mypage') || pathname.startsWith('/links');
+  const isProtectedApiRoute = pathname.startsWith('/api/links');
 
-  // 페이지 완성 후 주석 풀기
-  // if (!user && !request.nextUrl.pathname.startsWith("/signin") && !request.nextUrl.pathname.startsWith("/signup")) {
-  //   // no user, potentially respond by redirecting the user to the login page
-  //   const url = request.nextUrl.clone();
-  //   url.pathname = "/signin";
-  //   return NextResponse.redirect(url);
-  // }
+  // 페이지 라우트 보호
+  if (!user && isProtectedRoute) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/signin';
+    return NextResponse.redirect(url);
+  }
 
-  // // 현재 로그인 상태이면서 경로가 /login 인 경우 홈 화면으로 리다이렉트
-  // if (user && request.nextUrl.pathname.startsWith("/login")) {
-  //   return NextResponse.redirect(request.nextUrl.origin);
-  // }
+  // API 라우트 보호
+  if (!user && isProtectedApiRoute) {
+    return NextResponse.json({ error: '로그인이 필요합니다.' }, { status: 401 });
+  }
+
+  if (user && pathname.startsWith('/signin')) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/';
+    return NextResponse.redirect(url);
+  }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
   // creating a new response object with NextResponse.next() make sure to:
