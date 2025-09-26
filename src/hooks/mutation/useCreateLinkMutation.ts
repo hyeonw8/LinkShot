@@ -17,7 +17,12 @@ export const useCreateLinkMutation = () => {
     },
     onError: (error) => {
       console.error('Link Shot 저장 중 오류 발생:', error);
-      alert('Link Shot 저장에 실패했습니다. 다시 시도해주세요.');
+
+      if (error.message === 'AUTH_REQUIRED') {
+        alert('로그인이 필요합니다. 로그인 후 저장할 수 있습니다.');
+      } else {
+        alert(error.message || 'Link Shot 저장에 실패했습니다.');
+      }
     },
   });
 

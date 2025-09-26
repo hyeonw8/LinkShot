@@ -10,13 +10,21 @@ export const createLink = async (linkData: CreateLinkInput) => {
   });
 
   if (!res.ok) {
-    let message = 'Link Shot 저장 요청 실패';
-    try {
+    // 인증 에러
+    if (res.status === 401) {
+      throw new Error('AUTH_REQUIRED'); 
+    }
+    
+    // 검증 에러
+    if (res.status === 400) {
       const body = await res.json();
-      if (body?.error) message = body.error;
-    } catch {}
-    throw new Error(message);
+      throw new Error(body?.error || '잘못된 요청입니다'); 
+    }
+    
+    // 네트워크 에러
+    throw new Error('NETWORK_ERROR'); 
   }
+
 
   const data = await res.json();
 
