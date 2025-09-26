@@ -2,6 +2,7 @@ import { queryKeys } from '@/constants/queryKeys';
 import { toggleLink } from '@/lib/toggleLink';
 import { LinkResponse } from '@/types/link.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 interface ToggleLinkStatusParams {
   id: string;
@@ -17,6 +18,7 @@ type ToggleLinkStatusContext = {
 
 export const useToggleLinkMutation = () => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   // 기존 캐시된 데이터를 가져오기 위한 함수
   const getExistingLinks = () => {
@@ -76,7 +78,15 @@ export const useToggleLinkMutation = () => {
         queryClient.setQueryData(queryKeys.links.all, context.prevLinks);
       }
       console.error('Link Shot 카드 고정 중 오류 발생:', error);
-      alert('Link Shot 카드 고정에 실패했습니다. 다시 시도해주세요.');
+
+      if (error.message === 'AUTH_REQUIRED') {
+        alert('세션이 만료되었습니다. 로그인 페이지로 이동합니다.');
+        router.push('/signin');
+      } else if (error.message === 'NETWORK_ERROR') {
+        alert('네트워크 연결을 확인해주세요.');
+      } else {
+        alert(error.message || 'Link Shot 카드 고정에 실패했습니다. 다시 시도해주세요.');
+      }
     },
     // mutation이 성공하든 실패하든 상관없이 항상 실행되는 콜백
     onSettled: () => {

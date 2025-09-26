@@ -17,7 +17,15 @@ export const useEditLinkMutation = () => {
     },
     onError: (error) => {
       console.error('링크 저장 중 오류 발생:', error);
-      alert('Link Shot 수정에 실패했습니다. 다시 시도해주세요.');
+
+      if (error.message === 'AUTH_REQUIRED') {
+        alert('세션이 만료되었습니다. 로그인 페이지로 이동합니다.');
+        router.push('/signin');
+      } else if (error.message === 'NETWORK_ERROR') {
+        alert('네트워크 연결을 확인해주세요.');
+      } else {
+        alert(error.message || 'Link Shot 수정에 실패했습니다. 다시 시도해주세요.');
+      }
     },
   });
 

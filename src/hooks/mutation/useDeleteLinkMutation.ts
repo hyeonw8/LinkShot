@@ -1,6 +1,7 @@
 import { queryKeys } from '@/constants/queryKeys';
 import { deleteLink } from '@/lib/deleteLink';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 interface DeleteLinkParams {
   id: string;
@@ -12,6 +13,7 @@ interface DeleteLinkParams {
 
 export const useDeleteLinkMutation = () => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const deleteLinkMutation = useMutation({
     // payload 객체를 받도록 수정
@@ -44,7 +46,15 @@ export const useDeleteLinkMutation = () => {
 
     onError: (error) => {
       console.error('Link Shot 삭제 중 오류 발생:', error);
-      alert('Link Shot 삭제에 실패했습니다. 다시 시도해주세요.');
+      
+      if (error.message === 'AUTH_REQUIRED') {
+        alert('세션이 만료되었습니다. 로그인 페이지로 이동합니다.');
+        router.push('/signin');
+      } else if (error.message === 'NETWORK_ERROR') {
+        alert('네트워크 연결을 확인해주세요.');
+      } else {
+        alert(error.message || 'Link Shot 삭제에 실패했습니다. 다시 시도해주세요.');
+      }
     },
   });
 

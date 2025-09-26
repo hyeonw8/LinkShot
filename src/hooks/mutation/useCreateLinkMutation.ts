@@ -20,6 +20,8 @@ export const useCreateLinkMutation = () => {
 
       if (error.message === 'AUTH_REQUIRED') {
         alert('로그인이 필요합니다. 로그인 후 저장할 수 있습니다.');
+      } else if (error.message === 'NETWORK_ERROR') {
+        alert('네트워크 연결을 확인해주세요.');
       } else {
         alert(error.message || 'Link Shot 저장에 실패했습니다.');
       }
