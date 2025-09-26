@@ -4,12 +4,15 @@ import { CategoryInput } from './CategoryInput';
 import { useLinkEditor } from '@/hooks/useLinkEditor';
 import { useCreateLinkMutation } from '@/hooks/mutation/useCreateLinkMutation';
 import { LinkPreviewCard } from './LinkPreviewCard';
+import { useAuthStore } from '@/store/authStore';
 
 interface LinkPreviewCardProps {
   linkMetaData: any; // 타입 수정 필요
 }
 
 export const LinkPreviewContent = ({ linkMetaData }: LinkPreviewCardProps) => {
+  const { user } = useAuthStore();
+
   const { 
     meta,
     formattedUrl, 
@@ -31,6 +34,11 @@ export const LinkPreviewContent = ({ linkMetaData }: LinkPreviewCardProps) => {
 
   const handleSaveLink = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!user) {
+      alert('로그인이 필요합니다. 로그인 후 저장할 수 있습니다.');
+      return;
+    }
 
     if (!meta || !categoryInput.trim()) return;
 
