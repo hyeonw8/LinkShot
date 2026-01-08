@@ -6,7 +6,7 @@ const AuthCodeErrorPage = () => {
         로그인 도중 문제가 발생했어요. 다시 시도해주세요.
       </p>
       <a
-        href="/auth/login"
+        href="/auth/signin"
         className="text-blue-500 underline hover:text-blue-700"
       >
         로그인 페이지로 돌아가기
